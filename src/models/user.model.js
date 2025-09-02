@@ -55,7 +55,7 @@ const userSchema = new Schema({
 userSchema.pre("save", async function(next){
     // only do this when we create or update password, do not encrypt everytime
     if(!this.isModified("password")) return next(0);
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next() //this next is the (err,req,res, next) that we recieve from the app
 })
 
