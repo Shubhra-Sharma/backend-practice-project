@@ -32,8 +32,11 @@ const registerUser = asyncHandler( async (req,res) => {
     // req.files :- theses files access given by multer by default
     // 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log("avatar path: ",avatarLocalPath);
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    let coverImageLocalPath; 
+// To handle the case where coverimage is not uploaded by the user
+if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.lenth>0){
+    coverImageLocalPath = req.files.coverImage[0].path;
+}
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required");
     }
@@ -42,7 +45,7 @@ const registerUser = asyncHandler( async (req,res) => {
     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
     if(!avatar){
         throw new ApiError(400, "Avatar is required");
-    } // we did not do the same for coverImg because it is not compulsory but if avatar is not present then it will cause the DB to fail
+    } //if avatar is not present then it will cause the DB to fail as avatar is compulsory and required
     const user = await User.create({
         fullName,
         avatar: avatar.url,
