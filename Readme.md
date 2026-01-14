@@ -1,1 +1,1 @@
-This is a practice project for backend development using javascript.
+This is a practice project for backend development
